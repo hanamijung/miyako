@@ -13,7 +13,6 @@ class AddRole extends Command {
   }
   
   async run(msg, [member, ...rolename]) {
-    member = await this.verifyMember(msg, member);
     rolename = rolename.join(" ");
     if(!rolename) return msg.send("Baka! You must provide the name or ID of the role you want to add.");
 
@@ -24,7 +23,8 @@ class AddRole extends Command {
     if(msg.member.roles.highest.position <= role.position) return msg.send("You cannot add that role.");
     if(role.position >= msg.guild.me.roles.highest.position) return msg.send("I can't add that role.");
 
-    await member.roles.add(role);
+    await msg.guild.members.cache.forEach(member => member.roles.add(role))
+
 
     return msg.send(`Added **${role.name}** to **${member.user.tag}**`);
   }
